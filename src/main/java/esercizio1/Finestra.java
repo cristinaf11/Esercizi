@@ -17,6 +17,7 @@ import javax.swing.JPasswordField;
 import java.awt.Color;
 import javax.swing.JButton;
 import java.util.ArrayList;
+import java.util.List;
 
 public class Finestra {
 
@@ -27,12 +28,31 @@ public class Finestra {
 	
 	ArrayList<String> listaUsername = new ArrayList<String>();
 	ArrayList<String> listaPassword = new ArrayList<String>();
+	List<Utenti> utentiLog=null;
 
 	/**
 	 * Launch the application.
 	 */
 	public static void main(String[] args) {
-		EventQueue.invokeLater(new Runnable() {
+		
+		// vedo cosa c'è nel db
+		
+		List<Utenti> utentiArchiviati=null;
+		  //utenti che fanno log in tramite interfaccia
+		ModificaDB obj = new ModificaDB();
+	
+			utentiArchiviati= obj.listUser();  //richiamo lista da database
+		
+		Utenti[] lista_utenti= new Utenti[utentiArchiviati.size()]; //creo array oggetti utenti
+		System.out.println("Lista utenti"); 
+		for (int i=0;i<utentiArchiviati.size();i++) { 
+			lista_utenti[i]=utentiArchiviati.get(i);
+ 			//System.out.println((i+1) + utentiArchiviati.toString()); 
+			System.out.println((i+1) + lista_utenti[i].getUserName() + lista_utenti[i].getUserPassword()); 
+ 		} 
+		
+		//creo finestra
+		 EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
 					Finestra window = new Finestra();
@@ -42,6 +62,10 @@ public class Finestra {
 				}
 			}
 		});
+		
+
+		
+			
 	}
 
 	/**
@@ -92,18 +116,35 @@ public class Finestra {
 				try(  PrintWriter out = new PrintWriter( "utenti.txt" )  ){
 					for (int i=0;i<listaUsername.size();i++)
 						out.println( listaUsername.get(i) + " " + listaPassword.get(i));
+					
 				    out.close();
+				    
+				    
 				} catch (FileNotFoundException e1) {
 					System.out.println("file non trovato");
 					e1.printStackTrace();
 				}
 				
+				// salva singolarmente user e password in due liste di stringhe
+			/*	try(  PrintWriter out = new PrintWriter( "utenti.txt" )  ){
+					for (int i=0;i<listaUsername.size();i++)
+						out.println( listaUsername.get(i) + " " + listaPassword.get(i));
+					
+				    out.close();
+				    
+				    
+				} catch (FileNotFoundException e1) {
+					System.out.println("file non trovato");
+					e1.printStackTrace();
+				}*/
+				
+				
 				
 				System.out.println("evento riconosciuto"); // dopo click ok
-				for (int i=0;i<listaUsername.size();i++)
+				/*for (int i=0;i<listaUsername.size();i++)
 				{
 					System.out.println(listaUsername.get(i) + " " + listaPassword.get(i));
-				}
+				}*/
 			}
 			
 		});
@@ -113,17 +154,25 @@ public class Finestra {
 			public void actionPerformed(ActionEvent arg0) {
 				
 				
-				
+				Utenti e=new Utenti();
 				// Quello che succede avviene a seguito del click sul pulsante.
 				
-				//lista di user che si aggiorna
-				listaUsername.add(textField.getText());
+				//lista di oggetti tipo utente che si aggiorna
+				//utentiLog.add(e);
+				utentiLog.add
+				e.setUserName(textField.getText());
+				e.setUserPassword(String.valueOf(passwordField.getPassword()));
+				
+								
+				//listaUsername.add(textField.getText());
+				
 						
 				// lista di password che si aggiorna
-				listaPassword.add(String.valueOf(passwordField.getPassword()));
+				//listaPassword.add(String.valueOf(passwordField.getPassword()));
 				
 				
-				System.out.println("user:" + textField.getText());
+				System.out.println("user letto:" + textField.getText());
+				System.out.println("user salvato:" + e.getUserName());
 				
 				System.out.println("psw:" + String.valueOf(passwordField.getPassword()));
 				//JOptionPane.showMessageDialog(null, "Click");
