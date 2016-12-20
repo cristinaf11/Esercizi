@@ -95,6 +95,7 @@ public List<Utenti> listUser(){
 		transaction = session.beginTransaction();
 		
 		users = session.createQuery("from Utenti").list();
+		System.out.println("Lista utenti in database"); 
 	
 		for (Iterator iterator = users.iterator(); iterator.hasNext();)
 		{

@@ -28,7 +28,7 @@ public class Finestra {
 	
 	ArrayList<String> listaUsername = new ArrayList<String>();
 	ArrayList<String> listaPassword = new ArrayList<String>();
-	List<Utenti> utentiLog=null;
+	ArrayList<Utenti> utentiLog= new ArrayList<Utenti>(); //nb List è un'interfaccia quindi posso instanziare solo oggetti che la implementino (eg. ArrayList)
 
 	/**
 	 * Launch the application.
@@ -37,7 +37,7 @@ public class Finestra {
 		
 		// vedo cosa c'è nel db
 		
-		List<Utenti> utentiArchiviati=null;
+		/*List<Utenti> utentiArchiviati=null;
 		  //utenti che fanno log in tramite interfaccia
 		ModificaDB obj = new ModificaDB();
 	
@@ -49,7 +49,7 @@ public class Finestra {
 			lista_utenti[i]=utentiArchiviati.get(i);
  			//System.out.println((i+1) + utentiArchiviati.toString()); 
 			System.out.println((i+1) + lista_utenti[i].getUserName() + lista_utenti[i].getUserPassword()); 
- 		} 
+ 		} */
 		
 		//creo finestra
 		 EventQueue.invokeLater(new Runnable() {
@@ -63,7 +63,8 @@ public class Finestra {
 			}
 		});
 		
-
+		 //controllo se credenziali fornite esistono nel db
+		 
 		
 			
 	}
@@ -140,7 +141,7 @@ public class Finestra {
 				
 				
 				
-				System.out.println("evento riconosciuto"); // dopo click ok
+				//System.out.println("evento riconosciuto"); // dopo click ok
 				/*for (int i=0;i<listaUsername.size();i++)
 				{
 					System.out.println(listaUsername.get(i) + " " + listaPassword.get(i));
@@ -153,32 +154,58 @@ public class Finestra {
 		btnEnter.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				
-				
+				boolean trovato=false;
 				Utenti e=new Utenti();
 				// Quello che succede avviene a seguito del click sul pulsante.
 				
 				//lista di oggetti tipo utente che si aggiorna
-				//utentiLog.add(e);
-				utentiLog.add
+				
 				e.setUserName(textField.getText());
 				e.setUserPassword(String.valueOf(passwordField.getPassword()));
+				utentiLog.add(e); 
 				
-								
+				
+				// lista di username che si aggiorna
 				//listaUsername.add(textField.getText());
-				
-						
+										
 				// lista di password che si aggiorna
 				//listaPassword.add(String.valueOf(passwordField.getPassword()));
 				
 				
-				System.out.println("user letto:" + textField.getText());
-				System.out.println("user salvato:" + e.getUserName());
+				//System.out.println("user letto:" + textField.getText());
+				//System.out.println("user salvato:" + e.getUserName());
 				
-				System.out.println("psw:" + String.valueOf(passwordField.getPassword()));
+				//System.out.println("psw:" + String.valueOf(passwordField.getPassword()));
 				//JOptionPane.showMessageDialog(null, "Click");
+				
+				// vedo cosa c'è nel db
+				
+				List<Utenti> utentiArchiviati=null;
+				  
+				//utenti che fanno log in tramite interfaccia
+				ModificaDB obj = new ModificaDB();
+			
+				utentiArchiviati= obj.listUser();  //richiamo lista da database
+				
+				Utenti[] lista_utenti= new Utenti[utentiArchiviati.size()]; //creo array oggetti utenti
+				
+				System.out.println("credenziali inserite: " + e.getUserName() + " " + e.getUserPassword());
+				for (int i=0;i<utentiArchiviati.size();i++) { 
+					lista_utenti[i]=utentiArchiviati.get(i);
+		 			//System.out.println((i+1) + utentiArchiviati.toString()); 
+					//System.out.println((i+1) + lista_utenti[i].getUserName() + lista_utenti[i].getUserPassword()); 
+					
+					//if((lista_utenti[i].getUserName() == e.getUserName()) && (lista_utenti[i].getUserPassword()==e.getUserPassword()))
+					if ( (e.getUserName().equals(lista_utenti[i].getUserName())) && (e.getUserPassword().equals(lista_utenti[i].getUserPassword()))     ) 
+						trovato=true;
+				}
+				//System.out.println("flag" + trovato);
+					if (trovato==true) JOptionPane.showMessageDialog(null, "ok! Accesso consentito");
+				else JOptionPane.showMessageDialog(null, "Credenziali non valide");
 				
 				
 			}
 		});
 	}
 }
+
